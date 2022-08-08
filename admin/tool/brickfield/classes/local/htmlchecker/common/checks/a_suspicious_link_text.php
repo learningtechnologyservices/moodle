@@ -41,7 +41,7 @@ class a_suspicious_link_text extends brickfield_accessibility_test {
      */
     public function check(): void {
         // Need to process all enabled lang versions of invalidlinkphrases.
-        $badtext = brickfield_accessibility_test::get_all_invalidlinkphrases();
+        $badtext = brickfield_accessibility_test::get_all_phrases('invalidlinkphrases');
 
         foreach ($this->get_all_elements('a') as $a) {
             if (in_array(strtolower(trim($a->nodeValue)), $badtext) || $a->nodeValue == $a->getAttribute('href')) {
