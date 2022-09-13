@@ -114,6 +114,58 @@ EOD;
     </body>
 </html>
 EOD;
+
+    /** @var string HTML that should not get flagged. */
+    private $htmlpass3 = <<<EOD
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Table should have at least one th - pass</title>
+    </head>
+    <body>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        This is table heading
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        This is a tables data
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </body>
+</html>
+EOD;
+
+    /** @var string HTML that should not get flagged. */
+    private $htmlpass4 = <<<EOD
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Table should have at least one th - pass</title>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>
+                    This is table heading
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    This is a tables data
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
+EOD;
     /**
      * Test that th does not exist
      */
@@ -133,6 +185,17 @@ EOD;
         $this->assertEmpty($results);
 
         $results = $this->get_checker_results($this->htmlpass2);
+        $this->assertEmpty($results);
+    }
+    
+    /**
+     * Test extra node names are handled
+     */
+    public function test_extra_node_names() {
+        $results = $this->get_checker_results($this->htmlpass3);
+        $this->assertEmpty($results);
+
+        $results = $this->get_checker_results($this->htmlpass4);
         $this->assertEmpty($results);
     }
 }
