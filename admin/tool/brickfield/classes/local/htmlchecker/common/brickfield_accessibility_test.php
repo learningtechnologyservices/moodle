@@ -377,18 +377,35 @@ class brickfield_accessibility_test {
     }
 
     /**
-     * Returns an array of the invalidlinkphrases for all enabled language packs.
+     * Returns an array of the relevant phrases for all enabled language packs.
+     * @param string $stringname The string variable name to search for
      * @return array of the invalidlinkphrases for all enabled language packs.
      */
-    public static function get_all_invalidlinkphrases(): array {
+    public static function get_all_phrases(string $stringname): array {
         // Need to process all enabled lang versions of invalidlinkphrases.
         $allstrings = [];
         $enabledlangs = get_string_manager()->get_list_of_translations();
         foreach ($enabledlangs as $lang => $value) {
-            $tmpstring = (string)new \lang_string('invalidlinkphrases', manager::PLUGINNAME, null, $lang);
+            $tmpstring = (string)new \lang_string($stringname, manager::PLUGINNAME, null, $lang);
             $tmplangarray = explode('|', $tmpstring);
             $allstrings = array_merge($allstrings, $tmplangarray);
         }
+        // Removing duplicates if a lang is enabled, yet using default 'en' due to no relevant lang file.
+        $allstrings = array_unique($allstrings);
         return $allstrings;
+    }
+
+    /**
+     * Assesses whether a string contains any readable text, which is text that
+     * contains any characters other than whitespace characters.
+     *
+     * @param string $text
+     * @return bool
+     */
+    public static function is_text_readable(string $text): bool {
+        // These characters in order are a space, tab, line feed, carriage return,
+        // NUL-byte, vertical tab and non-breaking space unicode character \xc2\xa0.
+        $emptycharacters = " \t\n\r\0\x0B\xc2\xa0";
+        return trim($text, $emptycharacters) != '';
     }
 }
